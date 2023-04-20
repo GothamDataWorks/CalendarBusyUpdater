@@ -9,10 +9,11 @@ HISTORY:
 	
 *)
 
+-- internal prefs (maybe move to plist?):
+property doRemoveOutdatedBusyEvents : true
 
 -- Do not need to modify these properties:
 property prefsDomain : "com.GothamDataWorks.CalendarBusyUpdater"
-
 
 -- Define globals (that are not persistent properties)
 global prefsPath
@@ -73,13 +74,13 @@ end updateCalendar
 on initPrefs()
 	if testPathExists(prefsPath) then
 		readPrefs()
-		return "ReadPrefs"
+		return true
 	else
 		askPrefs()
 		if result then
 			writePrefs()
 		end if
-		return "AskedAndSavedPrefs"
+		return true
 	end if
 end initPrefs
 
@@ -119,11 +120,11 @@ on askPrefs()
 	
 	set calendarTargetName to text returned of (display dialog "Enter your 'target' calendar name (only ONE):" default answer "" buttons {"Cancel", "Next"} default button "Next")
 	
-	set genericBusyEventTitle to text returned of (display dialog "Enter the generic 'busy' event name:" default answer "" buttons {"Cancel", "Next"} default button "Next")
+	set genericBusyEventTitle to text returned of (display dialog "Enter the generic 'busy' event name:" default answer "BUSY Generic" buttons {"Cancel", "Next"} default button "Next")
 	
-	set daysBack to (text returned of (display dialog "Enter how many days back into the past this script should scan for events:" default answer "" buttons {"Cancel", "Next"} default button "Next")) as number
+	set daysBack to (text returned of (display dialog "Enter how many days back into the past this script should scan for events:" default answer 1 buttons {"Cancel", "Next"} default button "Next")) as number
 	
-	set daysFuture to (text returned of (display dialog "Enter how many days into the future this script should scan for events:" default answer "" buttons {"Cancel", "Next"} default button "Next")) as number
+	set daysFuture to (text returned of (display dialog "Enter how many days into the future this script should scan for events:" default answer 90 buttons {"Cancel", "Next"} default button "Next")) as number
 	
 	
 	return true
@@ -314,3 +315,4 @@ on replaceSimple(prefs)
 	return newText
 	
 end replaceSimple
+
